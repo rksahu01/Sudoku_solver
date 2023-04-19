@@ -20,31 +20,41 @@ bool isSafe(int i, int j, int n, vector<vector<int>> &grid)
     }
     return true;
 }
-bool solve(vector<vector<int>> &grid, int i, int j)
+bool solve(vector<vector<int>> &grid)
 {
 
-    if (i == grid.size() - 1 && j == grid.size())
-        return true;
-    if (j == grid.size())
+    for (int i = 0; i < grid.size(); i++)
     {
-        i++;
-        j = 0;
-    }
-    if (grid[i][j] > 0)
-        return solve(grid, i, j + 1);
-    for (int n = 1; n <= grid.size(); n++)
-    {
-        if (isSafe(i, j, n, grid))
+        for (int j = 0; j < grid.size(); j++)
         {
-            grid[i][j] = n;
 
-            if (solve(grid, i, j + 1))
-                return true;
+            if (grid[i][j] == 0)
+            {
+
+                for (int n = 1; n <= grid.size(); n++)
+                {
+                    if (isSafe(i, j, n, grid))
+                    {
+
+                        grid[i][j] = n;
+
+                        if (solve(grid))
+                            return true;
+                        else
+                        {
+                            grid[i][j] = 0;
+                        }
+                    }
+                }
+
+                return false;
+            }
         }
-        grid[i][j] = 0;
     }
-    return false;
+
+    return true;
 }
+
 int main()
 {
     int N;
@@ -59,7 +69,7 @@ int main()
             grid[i][j] = a;
         }
     }
-    solve(grid, 0, 0);
+    solve(grid);
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
